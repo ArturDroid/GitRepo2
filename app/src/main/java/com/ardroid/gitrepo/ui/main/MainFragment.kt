@@ -44,9 +44,9 @@ class MainFragment : Fragment() {
         //viewModel.getUser()
 
         viewModel.reposLiveData.observe(viewLifecycleOwner, Observer {
-            //message.text = it
+            message.text = it
         })
-        button.setOnClickListener {
+        message.setOnClickListener {
         viewModel.getRepos()
         }
 

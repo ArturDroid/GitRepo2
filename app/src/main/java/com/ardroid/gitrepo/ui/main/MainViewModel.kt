@@ -1,6 +1,5 @@
 package com.ardroid.gitrepo.ui.main
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.ardroid.gitrepo.dataSources.objects.user.User
@@ -26,7 +25,6 @@ class MainViewModel : ViewModel() {
         compositeDisposable.add(
             userRepository.getUser("ArturDroid")
                 .subscribe({
-                    Log.d("SUPER_TAG", "id: ${it.id} login; ${it.login}")
                     userLiveData.value = it
                 }, {
                     it.printStackTrace()
@@ -39,16 +37,16 @@ class MainViewModel : ViewModel() {
         compositeDisposable.add(
             reposRepository.getRepos("ArturDroid")
                 .subscribe({
-                    val data = it
-
-                    Log.d("SUPER_TAG", data.name)
-                    reposLiveData.value = data.name
+                    val arrName = arrayListOf<String>()
+                    for (i in it.indices) {
+                        arrName.add(it[i].name)
+                    }
+                    reposLiveData.value = arrName.joinToString(" ")
                 }, {
                     it.printStackTrace()
                 })
         )
     }
-
 
 
     override fun onCleared() {

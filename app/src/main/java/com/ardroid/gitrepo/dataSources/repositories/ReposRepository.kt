@@ -9,7 +9,7 @@ import io.reactivex.schedulers.Schedulers
 class ReposRepository {
     private val githubApi = GithubApi.getInstance()
 
-    fun getRepos(username: String): Single<Repos> {
+    fun getRepos(username: String): Single<List<Repos>> {
         return githubApi.getRepos(username)
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
