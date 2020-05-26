@@ -2,8 +2,6 @@ package com.ardroid.gitrepo.ui.main
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.ardroid.gitrepo.dataSources.data.CheckNetwork
-import com.ardroid.gitrepo.dataSources.data.DataContext
 import com.ardroid.gitrepo.dataSources.objects.user.User
 import com.ardroid.gitrepo.dataSources.repositories.ReposRepository
 import com.ardroid.gitrepo.dataSources.repositories.UserRepository
@@ -18,8 +16,8 @@ class MainViewModel : ViewModel() {
     val liveData = MutableLiveData<Int>()
     val userLiveData = MutableLiveData<User>()
     val reposLiveData = MutableLiveData<String>()
+    val urlAvatarLiveData = MutableLiveData<String>()
     lateinit var userName: String
-    lateinit var urlAvatar: String
 
 
     fun getNumber() {
@@ -44,21 +42,12 @@ class MainViewModel : ViewModel() {
                 .subscribe({
                     val arrName = mutableListOf<String>()
 
-                    urlAvatar =  it[1].owner.avatarUrl
-
-                    when (CheckNetwork.isConnected(DataContext.getContext())) {
-                        true -> {
-
-                            for (i in it.indices) {
-                                arrName.add(it[i].name)
-                            }
-                            reposLiveData.value = arrName.joinToString(" | ")
-                        }
-
-                        false -> {
-                            reposLiveData.value = "invalid connected to internet"
-                        }
+                    urlAvatarLiveData.value = it[1].owner.avatarUrl
+                    for (i in it.indices) {
+                        arrName.add(it[i].name)
                     }
+                    reposLiveData.value = arrName.joinToString(" | ")
+
 
                 }, {
                     it.printStackTrace()

@@ -1,6 +1,7 @@
 package com.ardroid.gitrepo.dataSources.objects.repos
 
 
+import com.ardroid.gitrepo.dataSources.objects.user.User
 import com.google.gson.annotations.SerializedName
 
 data class Repos(
@@ -111,7 +112,7 @@ data class Repos(
     @SerializedName("open_issues_count")
     val openIssuesCount: Int,
     @SerializedName("owner")
-    val owner: Owner,
+    val owner: User,
     @SerializedName("private")
     val `private`: Boolean,
     @SerializedName("pulls_url")

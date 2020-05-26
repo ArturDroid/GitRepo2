@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.ardroid.gitrepo.R
-import com.ardroid.gitrepo.dataSources.data.DataContext
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.main_fragment.*
@@ -55,16 +54,23 @@ class MainFragment : Fragment() {
         //viewModel.getUser()
 
         viewModel.reposLiveData.observe(viewLifecycleOwner, Observer {
-            Glide.with(DataContext.getContext())
-                .load(viewModel.urlAvatar)
+            message.text = it
+        })
+
+
+        viewModel.urlAvatarLiveData.observe(viewLifecycleOwner, Observer {
+            Glide.with(context)
+                .load(it)
                 .apply(RequestOptions().placeholder(R.drawable.ic_person_placeholder))
                 .apply(RequestOptions().override(200))
                 .into(imageView)
-            message.text = it
         })
+
+
         button.setOnClickListener {
             viewModel.userName = editText.text.toString()
             viewModel.getRepos()
+
         }
 
 
