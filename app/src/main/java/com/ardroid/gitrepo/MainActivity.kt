@@ -3,6 +3,8 @@ package com.ardroid.gitrepo
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.ardroid.gitrepo.dataSources.data.CheckNetwork
+import com.ardroid.gitrepo.dataSources.data.DataContext
 import com.ardroid.gitrepo.dataSources.repositories.ReposRepository
 import com.ardroid.gitrepo.dataSources.repositories.UserRepository
 import com.ardroid.gitrepo.temp.Callback
@@ -10,8 +12,7 @@ import com.ardroid.gitrepo.ui.main.MainFragment
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
-class MainActivity : AppCompatActivity() {
-
+open class MainActivity : AppCompatActivity() {
     private val userRepository = UserRepository()
     private val disposeBag = CompositeDisposable()
     private val reposRepository = ReposRepository()
@@ -27,6 +28,25 @@ class MainActivity : AppCompatActivity() {
 
 
 
+         fun initDataContext() {
+                DataContext.setContext(this)
+            }
+            initDataContext()
+
+//
+//            fun Context.isConnectedToNetwork(): Boolean {
+//                val connectivityManager =
+//                    this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
+//                return connectivityManager?.activeNetworkInfo?.isConnectedOrConnecting ?: false
+//            }
+
+            if (CheckNetwork.isConnected(this)) {
+                    Log.d("SUPER_TAG", "Connected")
+
+                }
+            else Log.d("SUPER_TAG", "!Connected")
+
+
             val result: Disposable = userRepository.getUser("ArDroid")
                 .subscribe({
                     Log.d("SUPER_TAG", "id: ${it.id} login; ${it.login}")
@@ -37,16 +57,10 @@ class MainActivity : AppCompatActivity() {
             disposeBag.add(result)
             result.dispose()
 
-            val resultRepos: Disposable = reposRepository.getRepos("ArDroid")
-                .subscribe({
-                    val items = it.toString()
-                    Log.d("SUPER_TAG", items)
-                }, { it.printStackTrace() })
+
             if (result.isDisposed) {
                 Log.d("TAG", "Dispose")
             }
-
-            disposeBag.add(resultRepos)
 
 
         }
@@ -56,6 +70,8 @@ class MainActivity : AppCompatActivity() {
             Log.d("SUPER_TAG", "$it")
             return@testCallback 1
         }
+
+
     }
 
     override fun onDestroy() {

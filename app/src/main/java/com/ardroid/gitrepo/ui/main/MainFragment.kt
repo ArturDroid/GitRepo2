@@ -9,6 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.ardroid.gitrepo.R
+import com.ardroid.gitrepo.dataSources.data.DataContext
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.main_fragment.*
 
 class MainFragment : Fragment() {
@@ -26,10 +29,18 @@ class MainFragment : Fragment() {
         return inflater.inflate(R.layout.main_fragment, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        imageView.setImageResource(R.drawable.ic_person_placeholder)
+
+    }
+
     @SuppressLint("SetTextI18n")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+
+        // viewModel = AndroidViewModel(Application()).getApplication()
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
 
         viewModel.liveData.observe(viewLifecycleOwner, Observer {
@@ -44,14 +55,23 @@ class MainFragment : Fragment() {
         //viewModel.getUser()
 
         viewModel.reposLiveData.observe(viewLifecycleOwner, Observer {
+            Glide.with(DataContext.getContext())
+                .load(viewModel.urlAvatar)
+                .apply(RequestOptions().placeholder(R.drawable.ic_person_placeholder))
+                .apply(RequestOptions().override(200))
+                .into(imageView)
             message.text = it
         })
-        message.setOnClickListener {
-        viewModel.getRepos()
+        button.setOnClickListener {
+            viewModel.userName = editText.text.toString()
+            viewModel.getRepos()
         }
 
 
+    }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
     }
 
 }

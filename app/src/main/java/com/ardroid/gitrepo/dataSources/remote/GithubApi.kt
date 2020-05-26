@@ -28,9 +28,8 @@ interface GithubApi {
     fun getRepos(@Path("username") username: String): Single<List<Repos>>
 
 
-    /**
-     * Companion object to create the GithubApiService
-     */
+
+
     companion object Factory {
         lateinit var apiInstance: GithubApi
         fun getInstance(): GithubApi {
