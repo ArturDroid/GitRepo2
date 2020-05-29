@@ -26,12 +26,9 @@ open class MainActivity : AppCompatActivity() {
                 .replace(R.id.container, MainFragment.newInstance())
                 .commitNow()
 
+            DataContext.setContext(this)
 
 
-         fun initDataContext() {
-                DataContext.setContext(this)
-            }
-            initDataContext()
 
 //
 //            fun Context.isConnectedToNetwork(): Boolean {

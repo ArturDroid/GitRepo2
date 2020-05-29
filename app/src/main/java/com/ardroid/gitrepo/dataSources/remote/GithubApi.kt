@@ -14,20 +14,18 @@ import retrofit2.http.Query
 
 interface GithubApi {
 
-    @GET("search/users/")
+    @GET("search/users")
     fun searchUser(
-        @Query("User") query: String,
-        @Query("page") page: Int,
-        @Query("per_page") perPage: Int
-    ): Single<UserResponse>
+        @Query("q") query: String ): Single<UserResponse>
+//        @Query("page") page: Int,
+//        @Query("per_page") perPage: Int
+
 
     @GET("users/{username}")
     fun getUser(@Path("username") username: String): Single<User>
 
     @GET("users/{username}/repos")
     fun getRepos(@Path("username") username: String): Single<List<Repos>>
-
-
 
 
     companion object Factory {

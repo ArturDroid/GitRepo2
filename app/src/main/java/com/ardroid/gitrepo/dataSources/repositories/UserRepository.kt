@@ -17,8 +17,8 @@ class UserRepository {
     }
 
 
-    fun searchUser(query: String, page: Int, perPage: Int): Single<UserResponse> {
-        return gitHubApi.searchUser(query, page, perPage)
+    fun searchUser(query: String): Single<UserResponse> {
+        return gitHubApi.searchUser(query)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }

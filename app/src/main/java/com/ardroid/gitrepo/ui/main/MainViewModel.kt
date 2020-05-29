@@ -2,7 +2,9 @@ package com.ardroid.gitrepo.ui.main
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.ardroid.gitrepo.dataSources.objects.repos.Repos
 import com.ardroid.gitrepo.dataSources.objects.user.User
+import com.ardroid.gitrepo.dataSources.objects.user.UserResponse
 import com.ardroid.gitrepo.dataSources.repositories.ReposRepository
 import com.ardroid.gitrepo.dataSources.repositories.UserRepository
 import io.reactivex.disposables.CompositeDisposable
@@ -15,8 +17,8 @@ class MainViewModel : ViewModel() {
     private val userRepository = UserRepository()
     val liveData = MutableLiveData<Int>()
     val userLiveData = MutableLiveData<User>()
-    val reposLiveData = MutableLiveData<String>()
-    val urlAvatarLiveData = MutableLiveData<String>()
+    val reposLiveData = MutableLiveData<List<Repos>>()
+    val searchUsersLiveData = MutableLiveData<UserResponse>()
     lateinit var userName: String
 
 
@@ -40,14 +42,8 @@ class MainViewModel : ViewModel() {
         compositeDisposable.add(
             reposRepository.getRepos(userName)
                 .subscribe({
-                    val arrName = mutableListOf<String>()
 
-                    urlAvatarLiveData.value = it[1].owner.avatarUrl
-                    for (i in it.indices) {
-                        arrName.add(it[i].name)
-                    }
-                    reposLiveData.value = arrName.joinToString(" | ")
-
+                    reposLiveData.value = it
 
                 }, {
                     it.printStackTrace()
@@ -55,6 +51,15 @@ class MainViewModel : ViewModel() {
         )
     }
 
+    fun searchUsers() {
+        compositeDisposable.add(
+            userRepository.searchUser(userName).subscribe({
+                searchUsersLiveData.value = it
+            }, {
+                it.printStackTrace()
+            })
+        )
+    }
 
     override fun onCleared() {
         super.onCleared()
