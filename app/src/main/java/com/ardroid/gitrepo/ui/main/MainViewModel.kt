@@ -2,12 +2,16 @@ package com.ardroid.gitrepo.ui.main
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.ardroid.gitrepo.dataSources.objects.repos.Repos
 import com.ardroid.gitrepo.dataSources.objects.user.User
 import com.ardroid.gitrepo.dataSources.objects.user.UserResponse
+import com.ardroid.gitrepo.dataSources.remote.GitHubCoroutinesApi
 import com.ardroid.gitrepo.dataSources.repositories.ReposRepository
 import com.ardroid.gitrepo.dataSources.repositories.UserRepository
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 class MainViewModel : ViewModel() {
@@ -19,7 +23,9 @@ class MainViewModel : ViewModel() {
     val userLiveData = MutableLiveData<User>()
     val reposLiveData = MutableLiveData<List<Repos>>()
     val searchUsersLiveData = MutableLiveData<UserResponse>()
+    val apiCoroutine = GitHubCoroutinesApi.apiInstance
     lateinit var userName: String
+    lateinit var searchUserQuery: String
 
 
     fun getNumber() {
@@ -51,14 +57,20 @@ class MainViewModel : ViewModel() {
         )
     }
 
-    fun searchUsers() {
-        compositeDisposable.add(
-            userRepository.searchUser(userName).subscribe({
-                searchUsersLiveData.value = it
-            }, {
-                it.printStackTrace()
-            })
-        )
+//    fun searchUsers() {
+//        compositeDisposable.add(
+//            userRepository.searchUser(userName).subscribe({
+//                searchUsersLiveData.value = it
+//            }, {
+//                it.printStackTrace()
+//            })
+//        )
+//    }
+
+    suspend fun searchUsersCoroutine() {
+        viewModelScope.launch(Dispatchers.Main) {
+          searchUsersLiveData.value =  apiCoroutine.searchUser(userName)
+        }
     }
 
     override fun onCleared() {
@@ -66,3 +78,4 @@ class MainViewModel : ViewModel() {
         compositeDisposable.clear()
     }
 }
+

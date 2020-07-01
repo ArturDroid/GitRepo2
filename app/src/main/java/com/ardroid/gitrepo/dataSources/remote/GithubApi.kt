@@ -9,6 +9,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -16,7 +17,8 @@ interface GithubApi {
 
     @GET("search/users")
     fun searchUser(
-        @Query("q") query: String ): Single<UserResponse>
+        @Query("q") query: String
+    ): Single<UserResponse>
 //        @Query("page") page: Int,
 //        @Query("per_page") perPage: Int
 
@@ -26,6 +28,9 @@ interface GithubApi {
 
     @GET("users/{username}/repos")
     fun getRepos(@Path("username") username: String): Single<List<Repos>>
+
+    @GET("users/{username}")
+    fun authUser(@Path("username") username: String, @Header("Authorization") token: String): Single<User>
 
 
     companion object Factory {

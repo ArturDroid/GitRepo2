@@ -11,8 +11,8 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ardroid.gitrepo.R
 import com.ardroid.gitrepo.dataSources.objects.repos.Repos
+import com.ardroid.gitrepo.dataSources.objects.repos.ReposItem
 import com.ardroid.gitrepo.temp.ReposAdapter
-import com.ardroid.gitrepo.temp.ReposItem
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.repos_fragment.*
 
@@ -46,27 +46,31 @@ class ReposFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         username.text = userName
 
+        viewModel.userLiveData.observe(viewLifecycleOwner, Observer {
+
+            Glide.with(context)
+                .load(it.avatar_url)
+                .into(image_view_user)
+
+        })
+
+
         viewModel.reposLiveData.observe(viewLifecycleOwner, Observer {
             val listReposItem = generateRepos(it)
             recycler_view_repos.adapter = ReposAdapter(listReposItem)
             recycler_view_repos.layoutManager = LinearLayoutManager(context)
             recycler_view_repos.setHasFixedSize(true)
-            Glide.with(context)
-                .load(it[1].owner.avatarUrl)
-                .into(image_view_user)
 
         })
+        viewModel.getUser()
         viewModel.getRepos()
 
-        button_cancel.setOnClickListener(View.OnClickListener {
+        button_cancel.setOnClickListener {
+         activity?.supportFragmentManager?.popBackStackImmediate()
 
-            activity?.supportFragmentManager?.beginTransaction()
-                ?.replace(
-                    R.id.container,
-                    MainFragment::class.java, Bundle.EMPTY
-                    )?.commit()
-        })
+        }
     }
+
 
     private fun generateRepos(list: List<Repos>): List<ReposItem> {
         val listR = ArrayList<ReposItem>()
@@ -74,7 +78,11 @@ class ReposFragment : Fragment() {
             val reposName = list[i].name
             val lang = "Lang: " + list[i].language
             val idValue = "ID: " + list[i].id.toString()
-            val item = ReposItem(reposName, lang, idValue)
+            val item = ReposItem(
+                reposName,
+                lang,
+                idValue
+            )
             listR += item
 
         }

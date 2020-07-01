@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.ardroid.gitrepo.R
+import com.ardroid.gitrepo.dataSources.objects.repos.ReposItem
 import kotlinx.android.synthetic.main.repos_item.view.*
 
 class ReposAdapter(private val reposList: List<ReposItem>) :

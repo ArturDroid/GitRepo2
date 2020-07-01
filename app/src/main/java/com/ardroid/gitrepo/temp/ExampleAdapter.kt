@@ -46,7 +46,6 @@ class ExampleAdapter(
                .load(item.imageUrl).apply(RequestOptions().override(100,100))
                .apply(RequestOptions().placeholder(R.drawable.ic_person_placeholder))
                .into(holder.image_view)
-            // holder.image_view.setImageResource(item.imageResource)
             holder.text_view_1.text = item.username
             holder.text_view_2.text = item.text2
             holder.setOnClickListener {
